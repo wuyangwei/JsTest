@@ -3,9 +3,10 @@
 */
 
 var Card = {};
+micoo.Card = Card;
 
 // 牌类型（花色）
-Card.TYPE = { 
+Card.SUIT = { 
 	Idle:-1,
 	Spade:0,	// 黑桃
 	Heart:1,	// 红桃
@@ -36,50 +37,75 @@ Card.POINT = {
 	Flower:15	// 花牌
 };
 
+// 普通牌、万能牌
+Card.TYPE = {
+	Idle:-1,
+	Normal:0,
+	Laizi:1
+};
+
 /*
 *	牌规则基类 - 所有的牌由rule生成
 */
 Card.rule = cc.Class.extend({
-	nums:[],
-	ctor:function() {
-
+	codes:[],
+	ctor:function(codes) {
+		self.codes = codes;
 	},
 	// @override
-	num2type:function(num) {
-		cc.error('rule.num2type not implement');
+	code2type:function(code) {
+		cc.error('rule.code2type not implement');
 	},
 	// @override
-	num2point:function(num) {
-		cc.error('rule.num2point not implement');
+	code2suit:function(code) {
+		cc.error('rule.code2suit not implement');
 	},
 	// @override
-	createCard:function(num) {
-		cc.error('rule.createCard not implement');
+	code2point:function(code) {
+		cc.error('rule.code2point not implement');
+	},
+	// @override
+	_card:function(code) {
+		cc.error('rule._card not implement');
+	}
+	// @fimal
+	createCard:function(code) {
+		cc.assert(this.isLegal(code), code + " is not legal.");
+		return this._card(code);
 	},
 	// @final
-	isLegal:function(num) {
-		return nums.indexOf(num) != -1;
+	isLegal:function(code) {
+		return codes.indexOf(code) != -1;
 	},
 });
 
 /*
 *	扑克牌基类
-*	@num(param)		牌的唯一编号
-*	@type(param)	牌类型（花色）
-*	@point(param)	牌点子
-*	@rule(param)	牌遵循的规则
+*	@code	牌的唯一编号
+*	@type	牌类型
+*	@suit 	牌花色
+*	@point	牌点子
+*	@rule	牌遵循的规则
 */
 Card.base = cc.Class.extend({
-	num:null,
+	code:null,
 	type:Card.TYPE.Idle,
+	suit:Card.SUIT.Idle,
 	point:Card.POINT.Idle,
 	rule:null,
-	ctor:function(num, rule){
+	ctor:function(code, rule){
 		var self = this;
 		self.rule = rule;
-		self.type = rule.num2type(num);
-		self.point = rule.num2point(num);
+		self.type = rule.code2type(code);
+		self.suit = rule.code2suit(code);
+		self.point = rule.code2point(code);
 	},
-});
 
-micoo.card = Card;
+	isJoker:function() {
+		return this.suit == Card.SUIT.Joker;
+	},
+
+	isLaizi:function() {
+		return this.type == Card.TYPE.Laizi;
+	}
+});
