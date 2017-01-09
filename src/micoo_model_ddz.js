@@ -65,7 +65,7 @@ ddz.playModeBase = cc.Class.extend({
     },
 
     addCGKind:function(cgKind) {
-        cc.asset(micoo.CardGroup.isCgType(cgKind) && cgKind.kindId, 'kind is not subobject of CardGroup.base');
+        cc.asset(micoo.CardGroup.isCgType(cgKind), 'kind is not subobject of CardGroup.base');
         if (!this.cgKinds[cgKind.kindId]) {
             this.cgKinds[cgKind.kindId] = cgKind;
         }

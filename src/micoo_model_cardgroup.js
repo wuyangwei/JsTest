@@ -25,10 +25,10 @@ CardGroup.cardgroup = cc.Class.extend({
     }
 });
 
-// 判断是否是牌型类
+// 判断是否是有效牌型类
 CardGroup.CARD_TYPE_NAME = 'CardGroup.CARD_TYPE';
 CardGroup.isCgType = function (o) {
-    return o._type_id_ == CardGroup.CARD_TYPE_NAME;
+    return o._type_id_ == CardGroup.CARD_TYPE_NAME && o.kindId;
 };
 
 /*所有可用的牌型列举实现*/
